@@ -116,7 +116,7 @@ battery_voltage = round((ADC(29).read_u16() * 3.3 / 65535) * 3, 3)
 Pin(WIFI_CS_PIN).value(old_state)
 
 
-usb_power_detection = Pin('WL_GPIO2', Pin.IN)
+usb_power_detection = Pin(PROBE_VBUS_ACTIV_PIN, Pin.IN)
 def usb_powered():
   return True if usb_power_detection.value() == 1 else False
 
