@@ -115,6 +115,12 @@ Pin(WIFI_CS_PIN, Pin.OUT, value=True)
 battery_voltage = round((ADC(29).read_u16() * 3.3 / 65535) * 3, 3)
 Pin(WIFI_CS_PIN).value(old_state)
 
+
+usb_power_detection = Pin('WL_GPIO2', Pin.IN)
+def usb_powered():
+  return True if usb_power_detection.value() == 1 else False
+
+
 # set up the button, external trigger, and rtc alarm pins
 rtc_alarm_pin = Pin(RTC_ALARM_PIN, Pin.IN, Pin.PULL_DOWN)
 external_trigger_pin = Pin(EXTERNAL_INTERRUPT_PIN, Pin.IN, Pin.PULL_DOWN)
@@ -236,6 +242,7 @@ def wake_reason_name(wake_reason):
 def get_sensor_readings():
   readings = get_board().get_sensor_readings()
   readings["voltage"] = battery_voltage
+  readings["power_input"] = 'USB' if usb_powered() else 'Battery'
   return readings
 
 # save the provided readings into a todays readings data file
